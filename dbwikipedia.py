@@ -1,7 +1,7 @@
 from peewee import *
 import datetime
 
-db=SqliteDatabase('wikipedians.db')
+db=SqliteDatabase('wikipedians2.db')
 
 class BModel(Model):
     class Meta:
@@ -9,9 +9,9 @@ class BModel(Model):
 
 
 class Recruited(BModel):
-        user_id = IntegerField(primary_key=True,unique=True)
+        user_id = IntegerField(PrimaryKeyField,unique=True)
         twitter_user_id = IntegerField()
-        screen_name = CharField(max_length=255, unique=True,index=True)
+        screen_name = CharField(max_length=255, unique=True)
         description = TextField()
 
 
@@ -20,10 +20,9 @@ class Recruited(BModel):
 
 class Tweets(BModel):
         #Saves the tweets that contain the hashtag that was used to recruit the user
-        tweet_id = IntegerField(primary_key=True,unique=True)
+        tweet_id = IntegerField(PrimaryKeyField, unique=False)
         user_tweets = ForeignKeyField(Recruited, to_field='screen_name', related_name='tweets')
         tweet_message = TextField()
-        #created_date = DateTimeField(default=datetime.datetime.now)
         hashtags_in_tweets = TextField()
         mentions = TextField()
         retweets = IntegerField()
@@ -31,7 +30,7 @@ class Tweets(BModel):
              db_table = 'user_tweets'
 
 class Hashtag(BModel):
-        hashtag_id = IntegerField(primary_key=True,unique=True)
+        hashtag_id = IntegerField(PrimaryKeyField, unique=False)
         user_of_hashtag = ForeignKeyField(Recruited,to_field='screen_name', related_name='hashtag')
         hashtag_text =TextField()
 
